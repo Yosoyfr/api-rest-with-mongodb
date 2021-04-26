@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  mongodb-express:
+    container_name: mongodb-express
+    restart: always
+    build: .
+    ports:
+      - "5000:5000"
+    links:
+      - mongodb
+    volumes:
+      - ./src:/usr/src/app/src
+    networks:
+      - mongodb-network
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./database:/data/db
+    restart: unless-stopped
+    networks:
+      - mongodb-network
+networks:
+  mongodb-network:
+    driver: "bridge"
